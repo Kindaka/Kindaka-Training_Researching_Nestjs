@@ -1,6 +1,8 @@
 # 🚀 Training & Researching NestJS
 
-![NestJS](https://nestjs.com/img/logo-small.svg)  
+<p align="center">
+  <img src="https://nestjs.com/img/logo-small.svg" width="100" alt="NestJS">
+</p>  
 _A Progressive Node.js framework for building efficient and scalable applications._
 
 ---
