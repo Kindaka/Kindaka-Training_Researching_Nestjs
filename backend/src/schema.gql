@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreatePostDto {
+  authorId: Float!
+  content: String!
+  title: String!
+}
+
+type Mutation {
+  createPost(data: CreatePostDto!): PostEntity!
+  deletePost(id: Int!): Boolean!
+  updatePost(data: UpdatePostInput!, id: Int!): PostEntity!
+}
+
+type PostEntity {
+  author: UserEntity!
+  content: String!
+  id: ID!
+  title: String!
+}
+
+type Query {
+  getPostById(id: Int!): PostEntity
+  posts: [PostEntity!]!
+}
+
+input UpdatePostInput {
+  authorId: Float
+  content: String
+  title: String
+}
+
+type UserEntity {
+  email: String!
+  fullName: String!
+  id: ID!
+  password: String!
+  posts: [PostEntity!]
+}

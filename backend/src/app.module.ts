@@ -6,6 +6,10 @@ import { AppConfig, DatabaseConfig } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -21,7 +25,13 @@ import { AuthService } from './auth/auth.service';
       }),
       inject: [ConfigService],
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // Tự động tạo schema
+      sortSchema: true,
+    }),
     UserModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService],
