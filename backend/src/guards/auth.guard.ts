@@ -1,6 +1,4 @@
-
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, BadRequestException } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 
@@ -8,34 +6,46 @@ import { UserService } from 'src/user/user.service';
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService, private userService: UserService) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean>{
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    
+    console.log('1️⃣ Đang kiểm tra AuthGuard...');
+
     try {
-      // 1) Get token from header
-    const token = request.headers.authorization.split(' ')[1];
-    
-    if (!token) {
-      throw new ForbiddenException('Vui lòng cung cấp token');
-    }
-    // 2) Verify token
-    const payload = await this.jwtService.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
+      // 1️⃣ Kiểm tra Authorization Header
+      const authHeader = request.headers.authorization;
+      console.log('🛠 Authorization Header:', authHeader);
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new ForbiddenException('Token không hợp lệ hoặc thiếu');
+      }
+      const token = authHeader.split(' ')[1];
+      console.log('🔑 Token nhận được:', token);
 
-    });
-    // 3) Get user from token
-    const user = await this.userService.findByEmail(payload.email);
-    if(!user) {
-      throw new BadRequestException('User không phù hợp với token');
-    }
+      // 2️⃣ Kiểm tra JWT_SECRET
+      console.log('🔐 JWT_SECRET:', process.env.JWT_SECRET);
+      if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET không được định nghĩa');
+      }
 
-    // 4) Set user to request
-    request.currentUser = user;
+      // 3️⃣ Verify Token
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET,
+      });
+      console.log('✅ Token Payload:', payload);
 
-    
+      // 4️⃣ Kiểm tra user từ database
+      const user = await this.userService.findByEmail(payload.email);
+      console.log('👤 User found:', user);
+      if (!user) {
+        throw new BadRequestException('User không phù hợp với token');
+      }
+
+      // 5️⃣ Gán user vào request
+      request.currentUser = user;
+      return true;
+
     } catch (error) {
+      console.error('❌ Lỗi AuthGuard:', error.message);
       throw new ForbiddenException('Token không hợp lệ hoặc đã hết hạn');
     }
-    return true;
   }
 }
