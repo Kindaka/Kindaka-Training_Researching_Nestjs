@@ -11,6 +11,7 @@ import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginUserDto, RegisterUserDto } from './dtos/auth.dto';
+import { CurrentUser } from './decorators/user.decorator';
 
 
 @Controller('api/v1/users')
@@ -26,6 +27,12 @@ export class UserController {
   findAll(): Promise<UserEntity[]> {
     console.log('Request from controller!');
     return this.userService.findAll();
+  }
+
+  @Get('/current-user')
+  @UseGuards(AuthGuard)
+  getCurrentUser(@CurrentUser() currentUser: UserEntity){
+    return currentUser;
   }
 
   @Get(':id')
