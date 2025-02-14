@@ -10,7 +10,28 @@ _A Progressive Node.js framework for building efficient and scalable application
 ## 📌 Getting Started
 
 ### ⚙️ 1. Setup Environment Variables
-Create `.env` files for both Docker Compose and the NestJS backend. Example environment files are provided with the `.example` postfix.
+Create `.env` files for both Docker Compose and the NestJS backend.
+
+#### 📂 backend/.env
+```
+DB_HOST=your_localhost
+DB_PORT=your_port
+DB_NAME=your_db_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+NODE_ENV=development
+PORT=your_port
+JWT_SECRET=randome_jwt_secret
+```
+
+#### 📂 ASM/.env
+```
+POSTGRESQL_PORT=your_port
+POSTGRESQL_USERNAME=your_username
+POSTGRESQL_DATABASE=your_db_name
+POSTGRESQL_PASSWORD=your_password
+```
 
 ### 🐳 2. Run Database Container
 Ensure Docker is installed, then run:
